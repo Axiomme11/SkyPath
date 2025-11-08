@@ -20,13 +20,15 @@ public class MainSwing {
     private JPanel sidebar;
     private JPanel contentArea;
     private boolean sidebarExpanded = true;
+    private boolean darkMode = false;
+
 
     public MainSwing() {
         initUI();
     }
 
     private void initUI() {
-        frame = new JFrame(Main.version);
+        frame = new JFrame( "SkyPath ! " + Main.version);
 
         try {
             Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/ressources/icon2d.png")));
@@ -83,23 +85,35 @@ public class MainSwing {
 
         JButton menu1 = new JButton("Calculs V/D/T");
         styleSidebarButton(menu1);
-        JButton menu2 = new JButton("Pythagore");
+        JButton menu2 = new JButton("Conversions");
         styleSidebarButton(menu2);
+        JButton menu3 = new JButton("Pythagore");
+        styleSidebarButton(menu3);
 
         menu1.addActionListener(e -> showMenu1View());
-        menu2.addActionListener(e -> showMenu2ViewEmpty());
+        menu2.addActionListener(e -> showMenu2View());
+        menu3.addActionListener(e -> showMenu3ViewEmpty());
 
         center.add(menu1);
         center.add(Box.createVerticalStrut(8));
         center.add(menu2);
+        center.add(Box.createVerticalStrut(8));
+        center.add(menu3);
 
         box.add(center, BorderLayout.CENTER);
 
         // Footer
+        /*JButton toggleButtonDarkMode = new JButton("\u2600");
+        toggleBtn.setFocusable(false);
+        toggleBtn.setBackground(new Color(0xBBD7FF));
+        toggleBtn.setBorder(BorderFactory.createLineBorder(new Color(0x8FB9FF)));
+        toggleBtn.addActionListener(e -> toggleDarkMode()); */
+
         JLabel footer = new JLabel(Main.version);
         footer.setForeground(new Color(0xD9F0FF));
         JPanel foot = new JPanel(new FlowLayout(FlowLayout.LEFT));
         foot.setOpaque(false);
+        //foot.add(toggleButtonDarkMode);
         foot.add(footer);
         box.add(foot, BorderLayout.SOUTH);
 
@@ -143,7 +157,8 @@ public class MainSwing {
                 } else {
                     // restore text based on action command (simple heuristic)
                     if (btn == ((JPanel) sidebar.getComponent(1)).getComponent(0)) btn.setText("Calculs V/D/T");
-                    if (btn == ((JPanel) sidebar.getComponent(1)).getComponent(2)) btn.setText("Pythagore");
+                    if (btn == ((JPanel) sidebar.getComponent(1)).getComponent(2)) btn.setText("Conversions");
+                    if (btn == ((JPanel) sidebar.getComponent(1)).getComponent(4)) btn.setText("Pythagore");
                 }
             }
         }
@@ -158,17 +173,39 @@ public class MainSwing {
         panel.setBorder(new EmptyBorder(20, 20, 20, 20));
         panel.setBackground(new Color(0xF7F9FC));
 
-        panel.add( createControlPanel( "Temps (h)", "Distance (NM)", "Vitesse (kts)", "Calculer Temps", "Main.CalcTemps()" ));
-        panel.add( createControlPanel( "Distance (NM)", "Vitesse (kts)", "Temps (h)", "Calculer Distance", "Main.CalcDistance()" ));
-        panel.add( createControlPanel( "Vitesse (kts)", "Distance (NM)", "Temps (h)", "Calculer Vitesse", "Main.CalcVitesse()" ));
+        panel.add( createControlPanelMenu1( "Temps (h)", "Distance (NM)", "Vitesse (kts)", "Calculer Temps", "Main.CalcTemps()" ));
+        panel.add( createControlPanelMenu1( "Distance (NM)", "Vitesse (kts)", "Temps (h)", "Calculer Distance", "Main.CalcDistance()" ));
+        panel.add( createControlPanelMenu1( "Vitesse (kts)", "Distance (NM)", "Temps (h)", "Calculer Vitesse", "Main.CalcVitesse()" ));
 
         contentArea.add(panel, BorderLayout.CENTER);
         contentArea.revalidate();
         contentArea.repaint();
+        frame.setTitle("SkyPath ! " + Main.version + "  -  Calculs V/D/T");
+    }
+
+    private void showMenu2View() {
+        contentArea.removeAll();
+        JPanel panel = new JPanel(new GridLayout(1, 3, 16, 10));
+        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        panel.setBackground(new Color(0xF7F9FC));
+
+        panel.add( createControlPanelMenu2( "Pieds - Mètres", "Pieds", "Mètres", "null",
+                "Mètres > Pieds","Pieds > Mètres", "Main.ConvertMtoFT()", "Main.ConvertFTtoM()" ));
+
+        panel.add( createControlPanelMenu2( "JJJ", "Vitesse (kts)", "Heures", "Minutes",
+                "Calculer Distance","kk" ,"Main.CalcDistance()", "" ));
+
+        panel.add( createControlPanelMenu2( "JJJ", "Distance (NM)", "TemNBJBHps (h)", "null",
+                "Calculer Vitesse","", "Main.CalcVitesse()", "" ));
+
+        contentArea.add(panel, BorderLayout.CENTER);
+        contentArea.revalidate();
+        contentArea.repaint();
+        frame.setTitle("SkyPath ! " + Main.version + "  -  Conversions");
     }
 
     // Menu 2: Pythagore empty view
-    private void showMenu2ViewEmpty() {
+    private void showMenu3ViewEmpty() {
         contentArea.removeAll();
         JPanel v = new JPanel();
         v.setLayout(new BoxLayout(v, BoxLayout.Y_AXIS));
@@ -185,14 +222,15 @@ public class MainSwing {
         contentArea.add(v, BorderLayout.NORTH);
         contentArea.revalidate();
         contentArea.repaint();
+        frame.setTitle("SkyPath ! " + Main.version + "  -  Pythagore / Trigonométrie");
     }
 
     // Helper to create a control panel column (UI only)
-    private JPanel createControlPanel(String titleText, String field1Label, String field2Label, String buttonText, String fonctionBtn) {
+    private JPanel createControlPanelMenu1(String titleText, String field1Label, String field2Label, String buttonText, String fonctionBtn) {
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
         box.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(0xD6E6FB)),
+                BorderFactory.createLineBorder(new Color(0x3585EE)),
                 new EmptyBorder(12, 12, 12, 12)
         ));
         box.setBackground(Color.WHITE);
@@ -250,9 +288,20 @@ public class MainSwing {
                 } else if ( Objects.equals(fonctionBtn, "Main.CalcTemps()") ) {
                     double result = 0.0;
                     result = Main.CalcTemps( Double.parseDouble(a), Double.parseDouble(b) );
-                    resultLbl.setText( "Sortie : " + field1Label + " = " + result );
-                    System.out.println( "Sortie : " + field1Label + " = " + result );
+                    resultLbl.setText( "Sortie : " + titleText + " = " + result );
+                    System.out.println( "Sortie : " + titleText + " = " + result );
 
+                } else if ( Objects.equals(fonctionBtn, "Main.CalcDistance()") ) {
+                    double result = 0.0;
+                    result = Main.CalcDistance( Double.parseDouble(a), Double.parseDouble(b) );
+                    resultLbl.setText( "Sortie : " + titleText + " = " + result );
+                    System.out.println( "Sortie : " + titleText + " = " + result );
+
+                } else if ( Objects.equals(fonctionBtn, "Main.CalcVitesse()") ) {
+                    double result = 0.0;
+                    result = Main.CalcVitesse( Double.parseDouble(a), Double.parseDouble(b) );
+                    resultLbl.setText( "Sortie : " + titleText + " = " + result );
+                    System.out.println( "Sortie : " + titleText + " = " + result );
 
                 }
             }
@@ -273,5 +322,135 @@ public class MainSwing {
         box.add(resultLbl);
         return box;
     }
+
+    private JPanel createControlPanelMenu2(String titleText, String field1Label, String field2Label, String field3label, String buttonText1, String buttonText2, String fonctionBtn1, String fonctionBtn2) {
+        JPanel box = new JPanel();
+        box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+        box.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(0x3585EE)),
+                new EmptyBorder(12, 12, 12, 12)
+        ));
+        box.setBackground(Color.WHITE);
+
+        JLabel title = new JLabel(titleText);
+        title.setFont(title.getFont().deriveFont(Font.BOLD, 14f));
+        title.setForeground(new Color(0x1B3C5B));
+        title.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel l1 = new JLabel(field1Label);
+        l1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JTextField tf1 = new JTextField();
+        tf1.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        tf1.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel l2 = new JLabel(field2Label);
+        l2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        JTextField tf2 = new JTextField();
+        tf2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        tf2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JButton calc1 = new JButton(buttonText1);
+        calc1.setAlignmentX(Component.LEFT_ALIGNMENT);
+        calc1.setBackground(new Color(0x1E88E5));
+        calc1.setForeground(Color.WHITE);
+        calc1.setFocusPainted(false);
+        calc1.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JButton calc2 = new JButton(buttonText2);
+        calc2.setAlignmentX(Component.LEFT_ALIGNMENT);
+        calc2.setBackground(new Color(0x1E88E5));
+        calc2.setForeground(Color.WHITE);
+        calc2.setFocusPainted(false);
+        calc2.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        JLabel input1 = new JLabel(" ");
+        input1.setForeground(new Color(0x0B5A83));
+        input1.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel input2 = new JLabel(" ");
+        input2.setForeground(new Color(0x0B5A83));
+        input2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel resultLbl = new JLabel(" ");
+        input2.setForeground(new Color(0x0B5A83));
+        input2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        calc1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String a = tf1.getText().isEmpty() ? "?" : tf1.getText();
+                String b = tf2.getText().isEmpty() ? "?" : tf2.getText();
+
+                System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
+
+                if ( b.matches("[a-zA-Z]+") ) {
+                    resultLbl.setText( "Veuillez saisir des chiffres uniquement !" );
+                    System.out.println("Veuillez saisir des chiffres uniquement !" );
+
+                } else if ( Objects.equals( fonctionBtn1, "Main.ConvertMtoFT()") && !Objects.equals( b, "?" ) ) {
+                    double result = Main.ConvertMtoFT(Double.parseDouble(b));
+                    tf1.setText(String.valueOf(result));
+                    System.out.println( result );
+                } else {
+                    System.out.println( "erreur de saisie" );
+                }
+
+            }
+
+
+        });
+
+        calc2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String a = tf1.getText().isEmpty() ? "?" : tf1.getText();
+                String b = tf2.getText().isEmpty() ? "?" : tf2.getText();
+
+                System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
+
+                if ( a.matches("[a-zA-Z]+") ) {
+                    resultLbl.setText( "Veuillez saisir des chiffres uniquement !" );
+                    System.out.println("Veuillez saisir des chiffres uniquement !" );
+
+                } else if ( Objects.equals( fonctionBtn2, "Main.ConvertFTtoM()") && !Objects.equals( a, "?" ) ) {
+                    double result = Main.ConvertFTtoM(Double.parseDouble(a));
+                    tf2.setText(String.valueOf(result));
+                    System.out.println(result);
+                } else {
+                    System.out.println( "erreur de saisie" );
+                }
+
+            }
+
+
+        });
+
+
+
+        box.add(title);
+        box.add(Box.createVerticalStrut(8));
+        box.add(l1);
+        box.add(tf1);
+        box.add(Box.createVerticalStrut(8));
+        box.add(l2);
+        box.add(tf2);
+        box.add(Box.createVerticalStrut(12));
+        box.add(calc1);
+        box.add(Box.createVerticalStrut(5));
+        box.add(calc2);
+        box.add(Box.createVerticalStrut(12));
+        box.add(input1);
+        box.add(input2);
+        box.add(resultLbl);
+        return box;
+    }
+
+    /*private void toggleDarkMode() {
+        darkMode = !darkMode;
+
+        // Appliquer à tous les composants du panel
+
+        frame.repaint();
+    }*/
     
 }
