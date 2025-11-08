@@ -26,7 +26,7 @@ public class MainSwing {
     }
 
     private void initUI() {
-        frame = new JFrame("SkyPath v1.0");
+        frame = new JFrame(Main.version);
 
         try {
             Image icon = ImageIO.read(Objects.requireNonNull(getClass().getResource("/ressources/icon2d.png")));
@@ -96,7 +96,7 @@ public class MainSwing {
         box.add(center, BorderLayout.CENTER);
 
         // Footer
-        JLabel footer = new JLabel("v1.0");
+        JLabel footer = new JLabel(Main.version);
         footer.setForeground(new Color(0xD9F0FF));
         JPanel foot = new JPanel(new FlowLayout(FlowLayout.LEFT));
         foot.setOpaque(false);
@@ -243,7 +243,7 @@ public class MainSwing {
                 input2.setText("Entrées : " + field2Label + " = " + b);
                 System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
 
-                if ( Objects.equals(a, "?") || Objects.equals(b, "?") ) {
+                if ( Objects.equals(a, "?") || Objects.equals(b, "?") || a.matches("[a-zA-Z]+") || b.matches("[a-zA-Z]+")) {
                     resultLbl.setText( "Veuillez saisir des chiffres uniquement !" );
                     System.out.println("Veuillez saisir des chiffres uniquement !" );
 
