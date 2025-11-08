@@ -1,3 +1,4 @@
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -5,7 +6,9 @@ public class Main {
         System.out.println("");
         double VitesseKTS = 450;
         double DistanceNM = 275;
-        double TempsH = 1.57; // 1.57h == 1h 34m
+        double TempsH = 1.57;// 1.57h == 1h 34m
+
+        SwingUtilities.invokeLater(MainSwing::new);
 
         /*  Fonction et formatage réponse du calcul du Temps
         TempsH = CalcTemps( DistanceNM,  VitesseKTS );
