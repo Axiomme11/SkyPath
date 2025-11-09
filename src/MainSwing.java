@@ -197,8 +197,8 @@ public class MainSwing {
         panel.add( createControlPanelMenu2( "Heures décimale - H & M", "Heures décimale", "Heures", "Minutes",
                 "H & M > Heures décimale","Heures décimale > H & M" ,"ConvertSepareToDecimal()", "ConvertDecimaltoSepare()" ));
 
-        panel.add( createControlPanelMenu2( "JJJ", "Distance (NM)", "TemNBJBHps (h)", "null",
-                "Calculer Vitesse","", "Main.CalcVitesse()", "" ));
+        panel.add( createControlPanelMenu2( "Noeuds - Mach", "Noeuds (kts)", "Mach", "null",
+                "Mach > Noeuds","Noeuds > Mach", "ConvertMACHtoKTS()", "ConvertKTStoMACH()" ));
 
         contentArea.add(panel, BorderLayout.CENTER);
         contentArea.revalidate();
@@ -406,6 +406,10 @@ public class MainSwing {
                     double result =  Main.ConvertSepareToDecimal( Double.parseDouble(b), Double.parseDouble(c));
                     tf1.setText( String.valueOf(result) );
                     System.out.println( result );
+                } else if ( Objects.equals( fonctionBtn1, "ConvertMACHtoKTS()") && !Objects.equals( b, "?" ) ) {
+                    double result =  Main.ConvertMACHtoKTS( Double.parseDouble(b) );
+                    tf1.setText( String.valueOf(result) );
+                    System.out.println( result );
                 }
 
             }
@@ -422,7 +426,7 @@ public class MainSwing {
 
                 System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
 
-                if ( b.matches("[a-zA-Z]+") ) {
+                if ( a.matches("[a-zA-Z]+") ) {
                     resultLbl.setText( "Veuillez saisir des chiffres uniquement !" );
                     System.out.println("Veuillez saisir des chiffres uniquement !" );
 
@@ -430,13 +434,19 @@ public class MainSwing {
                     double result = Main.ConvertFTtoM(Double.parseDouble(a));
                     tf2.setText(String.valueOf(result));
                     System.out.println( result );
+
                 } else if ( Objects.equals( fonctionBtn2, "ConvertDecimaltoSepare()") && !Objects.equals( a, "?" ) ) {
                     List<Integer> result = Main.ConvertDecimaltoSepare(Double.parseDouble(a));
                     tf2.setText( String.valueOf(result.get( 0 )) );
                     tf3.setText( String.valueOf( result.get( 1 )) );
                     System.out.println( "Sortie : " + result.get( 0 ) + " Heures" );
                     System.out.println( "Sortie : " + result.get( 1 ) + " Minutes" );
-                }
+
+                } else if ( Objects.equals( fonctionBtn2, "ConvertKTStoMACH()") && !Objects.equals( a, "?" ) ) {
+                    double result =  Main.ConvertKTStoMACH( Double.parseDouble(a) );
+                    tf2.setText( String.valueOf(result) );
+                    System.out.println( result );
+                } else { System.out.println( "erreur calculs" ); }
 
             }
 

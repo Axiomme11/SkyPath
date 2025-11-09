@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Main {
 
-    public static String version = "v0.7";
+    public static String version = "v0.8";
 
     public static void main(String[] args) {
 
@@ -86,13 +86,25 @@ public class Main {
     }
 
     public static double ConvertFTtoM( double ft ) {
-        ft = ft / 0.3048;
-        return ft = Math.round(ft * 100.0) / 100.0;
+        double m = ft / 0.3048;
+        return m = Math.round(ft * 100.0) / 100.0;
     }
 
     public static double ConvertMtoFT( double m ) {
         m = m * 0.3048;
         return m = Math.round(m * 100.0) / 100.0;
+    }
+
+    public static double ConvertKTStoMACH( double kts ) {
+        double mach = kts / 661.5474;
+        mach = Math.round( mach * 1000000.0) / 1000000.0;
+        return mach;
+    }
+
+    public static double ConvertMACHtoKTS( double mach) {
+        double kts = Math.round( mach * 661.5474 );
+        kts = Math.round( kts * 10000.0) / 10000.0;
+        return kts;
     }
 
 }
