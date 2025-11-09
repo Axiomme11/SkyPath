@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class MainSwing {
@@ -192,8 +194,8 @@ public class MainSwing {
         panel.add( createControlPanelMenu2( "Pieds - Mètres", "Pieds", "Mètres", "null",
                 "Mètres > Pieds","Pieds > Mètres", "Main.ConvertMtoFT()", "Main.ConvertFTtoM()" ));
 
-        panel.add( createControlPanelMenu2( "JJJ", "Vitesse (kts)", "Heures", "Minutes",
-                "Calculer Distance","kk" ,"Main.CalcDistance()", "" ));
+        panel.add( createControlPanelMenu2( "Heures décimale - H & M", "Heures décimale", "Heures", "Minutes",
+                "H & M > Heures décimale","Heures décimale > H & M" ,"ConvertSepareToDecimal()", "ConvertDecimaltoSepare()" ));
 
         panel.add( createControlPanelMenu2( "JJJ", "Distance (NM)", "TemNBJBHps (h)", "null",
                 "Calculer Vitesse","", "Main.CalcVitesse()", "" ));
@@ -204,7 +206,7 @@ public class MainSwing {
         frame.setTitle("SkyPath ! " + Main.version + "  -  Conversions");
     }
 
-    // Menu 2: Pythagore empty view
+    // Menu 3: Pythagore empty view
     private void showMenu3ViewEmpty() {
         contentArea.removeAll();
         JPanel v = new JPanel();
@@ -323,7 +325,7 @@ public class MainSwing {
         return box;
     }
 
-    private JPanel createControlPanelMenu2(String titleText, String field1Label, String field2Label, String field3label, String buttonText1, String buttonText2, String fonctionBtn1, String fonctionBtn2) {
+    private JPanel createControlPanelMenu2(String titleText, String field1Label, String field2Label, String field3Label, String buttonText1, String buttonText2, String fonctionBtn1, String fonctionBtn2) {
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
         box.setBorder(BorderFactory.createCompoundBorder(
@@ -348,6 +350,14 @@ public class MainSwing {
         JTextField tf2 = new JTextField();
         tf2.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
         tf2.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        JLabel l3 = new JLabel(field3Label);
+        JTextField tf3 = new JTextField();
+        if ( !Objects.equals(field3Label, "null")) {
+            l3.setAlignmentX(Component.LEFT_ALIGNMENT);
+            tf3.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+            tf3.setAlignmentX(Component.LEFT_ALIGNMENT);
+        }
 
         JButton calc1 = new JButton(buttonText1);
         calc1.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -380,6 +390,7 @@ public class MainSwing {
             public void actionPerformed(ActionEvent e) {
                 String a = tf1.getText().isEmpty() ? "?" : tf1.getText();
                 String b = tf2.getText().isEmpty() ? "?" : tf2.getText();
+                String c = tf3.getText().isEmpty() ? "?" : tf3.getText();
 
                 System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
 
@@ -391,8 +402,10 @@ public class MainSwing {
                     double result = Main.ConvertMtoFT(Double.parseDouble(b));
                     tf1.setText(String.valueOf(result));
                     System.out.println( result );
-                } else {
-                    System.out.println( "erreur de saisie" );
+                } else if ( Objects.equals( fonctionBtn1, "ConvertSepareToDecimal()") && !Objects.equals( b, "?" ) && !Objects.equals( c, "?" ) ) {
+                    double result =  Main.ConvertSepareToDecimal( Double.parseDouble(b), Double.parseDouble(c));
+                    tf1.setText( String.valueOf(result) );
+                    System.out.println( result );
                 }
 
             }
@@ -405,19 +418,24 @@ public class MainSwing {
             public void actionPerformed(ActionEvent e) {
                 String a = tf1.getText().isEmpty() ? "?" : tf1.getText();
                 String b = tf2.getText().isEmpty() ? "?" : tf2.getText();
+                String c = tf3.getText().isEmpty() ? "?" : tf3.getText();
 
                 System.out.println("Entrées : " + field1Label + " = " + a + " ; " + field2Label + " = " + b);
 
-                if ( a.matches("[a-zA-Z]+") ) {
+                if ( b.matches("[a-zA-Z]+") ) {
                     resultLbl.setText( "Veuillez saisir des chiffres uniquement !" );
                     System.out.println("Veuillez saisir des chiffres uniquement !" );
 
                 } else if ( Objects.equals( fonctionBtn2, "Main.ConvertFTtoM()") && !Objects.equals( a, "?" ) ) {
                     double result = Main.ConvertFTtoM(Double.parseDouble(a));
                     tf2.setText(String.valueOf(result));
-                    System.out.println(result);
-                } else {
-                    System.out.println( "erreur de saisie" );
+                    System.out.println( result );
+                } else if ( Objects.equals( fonctionBtn2, "ConvertDecimaltoSepare()") && !Objects.equals( a, "?" ) ) {
+                    List<Integer> result = Main.ConvertDecimaltoSepare(Double.parseDouble(a));
+                    tf2.setText( String.valueOf(result.get( 0 )) );
+                    tf3.setText( String.valueOf( result.get( 1 )) );
+                    System.out.println( "Sortie : " + result.get( 0 ) + " Heures" );
+                    System.out.println( "Sortie : " + result.get( 1 ) + " Minutes" );
                 }
 
             }
@@ -431,9 +449,14 @@ public class MainSwing {
         box.add(Box.createVerticalStrut(8));
         box.add(l1);
         box.add(tf1);
-        box.add(Box.createVerticalStrut(8));
+        box.add(Box.createVerticalStrut(12));
         box.add(l2);
         box.add(tf2);
+        box.add(Box.createVerticalStrut(8));
+        if ( !Objects.equals(field3Label, "null" ) ) {
+            box.add(l3);
+            box.add(tf3);
+        }
         box.add(Box.createVerticalStrut(12));
         box.add(calc1);
         box.add(Box.createVerticalStrut(5));

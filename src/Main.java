@@ -1,15 +1,18 @@
 import javax.swing.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Main {
 
-    public static String version = "v0.6";
+    public static String version = "v0.7";
 
     public static void main(String[] args) {
 
         System.out.println("");
-        double VitesseKTS = 450;
+        /*double VitesseKTS = 450;
         double DistanceNM = 275;
-        double TempsH = 1.5;// 1.57h == 1h 34m
+        double TempsH = 1.5;// 1.57h == 1h 34m   */
 
         SwingUtilities.invokeLater(MainSwing::new);
 
@@ -67,13 +70,16 @@ public class Main {
     }
 
 
-    public static String ConvertDecimaltoSepare( double heuresDecimales ) {
+    public static List<Integer> ConvertDecimaltoSepare(double heuresDecimales ) {
         int heures = (int) heuresDecimales;
         int minutes = (int) ((heuresDecimales - heures) * 60);
-        return heures + "h " + minutes + "m";
+        List<Integer> list = new ArrayList<>();
+        list.add(heures);
+        list.add(minutes);
+        return list;
     }
 
-    public static double ConvertSepareToDecimal( double heures, double minutes ) {
+    public static double ConvertSepareToDecimal(double heures, double minutes ) {
         double heuresDecimales = ((heures * 60) + minutes) / 60.0;
         heuresDecimales = Math.round(heuresDecimales * 100.0) / 100.0;
         return heuresDecimales;

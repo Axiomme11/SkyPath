@@ -2,6 +2,9 @@
 
 SkyPath est un outil qui permet de : 
 
-    - Calculer soit une vitesse, une distance ou un temps donné en utilisant la relation V = D/T
-    
-    - Calculer une distance entre un point GPS et un autre avec des paramètres d'altitude grâce à Pythagore
+    - Sytème d'estimation de temps / distance / vitesse :  - pouvoir estimer le temps restant en donnant une vitesse donnée et une distance voulu
+                                                           - pouvoir estimer une distance en donnant une vitesse donnée et un temps donné
+                                                           - pouvoir estimer une vitesse en donnant une distance à parcourir et un temps donné
+
+
+    - Système de calcul de distance entre deux position GPS au sol mais utiliser pythagore pour calculer la distance entre au sol et en altitulde
